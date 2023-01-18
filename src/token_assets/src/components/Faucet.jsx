@@ -5,6 +5,7 @@ import { token } from "../../../declarations/token/index";
 function Faucet() {
 
   async function handleClick(event) {
+      await token.payOut();
 
   }
 

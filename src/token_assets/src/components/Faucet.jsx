@@ -1,4 +1,6 @@
 import React from "react";
+import { token } from "../../../declarations/token/index";
+
 
 function Faucet() {
 

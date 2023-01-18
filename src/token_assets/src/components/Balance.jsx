@@ -16,6 +16,7 @@ function Balance() {
     const symbol =  await  token.getSymbol();
     setSymbol(symbol);
     sethidden(false);
+    
   }
 
 

@@ -23,4 +23,9 @@ actor token {
     public query func getSymbol() : async Text {
          return symbol ; 
     }
+
+    public shared(msg) func payOut() : async Text {
+        let amount = 10000;
+        balances.put(msg.caller ,amount);
+    };
 }

@@ -1,5 +1,6 @@
 import Principal "mo:base/Principal";
 import HashMap "mo:base/HashMap"
+import Iter "mo:base/Iter";
 
 actor token {
 
@@ -7,9 +8,10 @@ actor token {
     var totalSupply : Nat = 1000000000;
     var symbol : Text = "LAT";
 
-    var balances = HashMap.HashMap<Principal,Nat>(1, Principal.equal, Principal.hash);
-    balances.put(owner, totalSupply);
+    private stable var balanceEntries : [(Principal , Nat)] = [];
 
+    private var balances = HashMap.HashMap<Principal,Nat>(1, Principal.equal, Principal.hash);
+   
     public query func balanceOf(who : Principal) : async Nat {
 
         let balance : Nat = switch (balances.get(who)) { //the return value is a Option (similar to swifts optional its a typesafe null) this switch statement helps identify it.
@@ -50,5 +52,16 @@ actor token {
             return "Insufficient Funds"
         }
 
+    }
+
+    system func preupgrade() {
+        balanceEntries := Iter.toArray(balances.entries());
+    }
+
+    system func postupgrade() {
+        balances := HashMap.fromIter<Principal,Nat>(balanceEntries.val(),Principal.equal() , Principal.hash());
+        if(balances.size < 1){
+         balances.put(owner, totalSupply);
+        }
     }
 }
